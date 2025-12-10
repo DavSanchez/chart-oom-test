@@ -6,7 +6,7 @@ metadata:
     app: counter-job
 spec:
   # Setting replicas to 1
-  replicas: 3
+  replicas: 5
   selector:
     matchLabels:
       app: counter-job
