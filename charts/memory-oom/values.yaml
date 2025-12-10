@@ -1,0 +1,40 @@
+image:
+  repository: python
+  tag: "3-alpine"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+# Container memory allocation behavior
+# These are strings so they are inserted as-is into env vars
+memory:
+  # bytes to allocate per step
+  stepBytes: "1048576" # 1 MiB
+  # sleep seconds between steps
+  intervalSeconds: "0.2"
+  # total steps before exit (set high to reach OOM)
+  steps: "100000"
+# K8s resources (keep small to trigger OOM safely)
+resources:
+  requests:
+    cpu: "5m"
+    memory: "16Mi"
+  limits:
+    cpu: "50m"
+    memory: "32Mi"
+
+pod:
+  name: memory-oom
+  annotations: {}
+  labels: {}
+
+restartPolicy: Always
+
+# Use a Deployment to get CrashLoopBackOff behavior automatically
+replicaCount: 1
+
+# Optional node scheduling
+nodeSelector: {}
+tolerations: []
+affinity: {}
