@@ -1,71 +1,48 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "memory-oom.fullname" . }}
+  name: counter-deployment
   labels:
-    {{- include "memory-oom.labels" . | nindent 4 }}
+    app: counter-job
 spec:
-  replicas: {{ .Values.replicaCount }}
+  # Setting replicas to 1
+  replicas: 3
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "memory-oom.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app: counter-job
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "memory-oom.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        {{- with .Values.pod.labels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      annotations:
-        {{- with .Values.pod.annotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        app: counter-job
     spec:
-      restartPolicy: {{ .Values.restartPolicy }}
       containers:
-        - name: {{ .Values.pod.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - /bin/sh
-            - -c
-            - |
-              set -eu
-              echo "Starting memory eater..."
-              python3 - <<'PY'
-              import os, time
-              step = int(os.getenv('STEP_BYTES', '1048576'))
-              interval = float(os.getenv('INTERVAL_SECONDS', '0.2'))
-              steps = int(os.getenv('STEPS', '100000'))
-              chunks = []
-              print(f"Allocating {step} bytes every {interval}s up to {steps} steps")
-              for i in range(steps):
-                  chunks.append(bytearray(step))
-                  if i % 50 == 0:
-                      print(f"Allocated ~{(i+1)*step/1048576:.1f} MiB")
-                  time.sleep(interval)
-              print("Completed without OOM (unlikely with small limits). Exiting...")
-              PY
-              # Sleep shortly to allow logs to flush
-              sleep 2
-          env:
-            - name: STEP_BYTES
-              value: "{{ .Values.memory.stepBytes }}"
-            - name: INTERVAL_SECONDS
-              value: "{{ .Values.memory.intervalSeconds }}"
-            - name: STEPS
-              value: "{{ .Values.memory.steps }}"
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      nodeSelector:
-        {{- toYaml .Values.nodeSelector | nindent 8 }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      - name: counter-container
+        image: busybox:latest
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            # Initialize counter
+            i=1
+            max={{ .Values.maxCount }}
+            echo "Starting counter "
+
+            # Loop until the condition is met
+            while true; do
+
+              # 1. Check exit condition first
+              if [ $i -gt $max ]; then
+                echo "Counter $i is greater than $max. Exiting with error (exit 1)."
+                exit 1
+              fi
+
+              # 2. Log the current count
+              echo "$(date) | Current count: $i"
+
+              # 3. Increment and sleep
+              i=$((i + 1))
+              sleep 1
+            done
+        resources:
+          limits:
+            cpu: "10m"
+            memory: "30Mi"

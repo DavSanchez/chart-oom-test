@@ -2,5 +2,5 @@ apiVersion: v2
 name: memory-oom
 description: A minimal chart that starts a pod and progressively consumes memory until OOMKilled, useful for testing CrashLoopBackOff behavior.
 type: application
-version: 0.1.0
+version: 0.2.0
 appVersion: "1.0.0"
