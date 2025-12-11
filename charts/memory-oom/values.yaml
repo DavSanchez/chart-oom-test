@@ -1,5 +1,7 @@
 # Container memory allocation behavior
 maxCount: 100
+hasProblem: true
+
 # K8s resources (keep small to trigger OOM safely)
 resources:
   requests:

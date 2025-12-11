@@ -24,19 +24,34 @@ spec:
             # Initialize counter
             i=1
             max={{ .Values.maxCount }}
-            echo "Starting counter "
+            crash={{ .Values.hasProblem }}
+            
+            # JSON logging helper
+            log() {
+              # busybox date doesn't support -Iseconds, using explicit format
+              ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+              echo "{\"timestamp\": \"$ts\", \"level\": \"$1\", \"message\": \"$2\", \"count\": $i}"
+            }
+
+            log "INFO" "Starting counter"
 
             # Loop until the condition is met
             while true; do
 
               # 1. Check exit condition first
               if [ $i -gt $max ]; then
-                echo "Counter $i is greater than $max. Exiting with error (exit 1)."
-                exit 1
+                if [ "$crash" = "true" ]; then
+                  log "ERROR" "Counter $i is greater than $max. Exiting with error (exit 1)."
+                  exit 1
+                else
+                  log "INFO" "Counter $i is greater than $max but the problems were fixed (crash=$crash)."
+                  log "INFO" "Resetting counter to 1."
+                  i=1
+                fi
               fi
 
               # 2. Log the current count
-              echo "$(date) | Current count: $i"
+              log "INFO" "Current count"
 
               # 3. Increment and sleep
               i=$((i + 1))

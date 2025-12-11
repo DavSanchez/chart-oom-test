@@ -3,7 +3,18 @@ entries:
   memory-oom:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-12-10T16:18:23.314707Z"
+    created: "2025-12-11T09:05:37.077392Z"
+    description: A minimal chart that starts a pod and progressively consumes memory
+      until OOMKilled, useful for testing CrashLoopBackOff behavior.
+    digest: 983f1395f52c71e5b4a5e44717c1591e4c945e7666f9bd5477206137e7c4b216
+    name: memory-oom
+    type: application
+    urls:
+    - memory-oom-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-12-11T09:05:37.077231Z"
     description: A minimal chart that starts a pod and progressively consumes memory
       until OOMKilled, useful for testing CrashLoopBackOff behavior.
     digest: f15e4473af1914a296d553f873b504d58006faba36f15a41d8c9ccd86c6817bd
@@ -14,7 +25,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-12-10T16:18:23.314524Z"
+    created: "2025-12-11T09:05:37.076906Z"
     description: A minimal chart that starts a pod and progressively consumes memory
       until OOMKilled, useful for testing CrashLoopBackOff behavior.
     digest: 1bfd169efb4daa47bd1c3a911bb824e130060ca31af6f55abc5db92b2aed298d
@@ -25,7 +36,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-12-10T16:18:23.313956Z"
+    created: "2025-12-11T09:05:37.07652Z"
     description: A minimal chart that starts a pod and progressively consumes memory
       until OOMKilled, useful for testing CrashLoopBackOff behavior.
     digest: 539bcd0f915018782538f0375e2c2283d761383f1e3ca249e26aaf6484723fbe
@@ -34,4 +45,4 @@ entries:
     urls:
     - memory-oom-0.1.0.tgz
     version: 0.1.0
-generated: "2025-12-10T16:18:23.313281Z"
+generated: "2025-12-11T09:05:37.075874Z"
